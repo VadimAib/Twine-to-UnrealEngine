@@ -61,3 +61,6 @@ desktop.ini
 *.log
 *.tmp
 *.bak
+
+# --- Source Files ---
+*.twee
