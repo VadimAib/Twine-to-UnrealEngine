@@ -1,4 +1,4 @@
-# Twine to DataTable Parser
+# Twine to Unreal Engine Parser
 
 A Python-based pipeline to convert Twine (`.twee`) stories into JSON files, ready for import as Data Tables in Unreal Engine.
 
@@ -49,7 +49,7 @@ Twine to DataTable Conversion Pipeline
 
 Input file: "MyStory.twee"
 
-[12:00:00] INFO: Twine → DataTable Conversion Pipeline
+[12:00:00] INFO: Twine → Unreal Engine Conversion Pipeline
 [12:00:00] INFO: Output file: MyStory.json
 [12:00:00] INFO: Run number: 1
 
