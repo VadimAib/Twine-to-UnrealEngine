@@ -44,7 +44,7 @@ build_dialogue.bat "MyStory.twee"
 
 ```
 ============================================================
-Twine to DataTable Conversion Pipeline
+Twine → Unreal Engine Conversion Pipeline
 ============================================================
 
 Input file: "MyStory.twee"
@@ -160,11 +160,25 @@ Backups are only created when the file actually changes.
 [[NodeName<-Text]]
 ```
 
-### Inline Actions
+### Actions in Node Text
+
+Use `<<set>>` and `<<unset>>` macros anywhere in the passage body:
 
 ```
-[[Text|NodeName][$var = value]]
-[[Text|NodeName][$var += 1]]
+<<set $variable = 5>>
+<<set $variable += 1>>
+<<set $variable -= 2>>
+<<unset $variable>>
+```
+
+### Inline Actions in Choices
+
+Attach actions directly to choices using the short `[$var = value]` format:
+
+```
+[[Choice Text|NodeName][$variable = 5]]
+[[Choice Text|NodeName][$variable += 1]]
+[[Choice Text|NodeName][$variable -= 2]]
 ```
 
 ### Conditions
@@ -172,6 +186,10 @@ Backups are only created when the file actually changes.
 ```
 <<if $var >= 5>>
   [[Conditional Choice|NodeName]]
+<<endif>>
+
+<<if not $has_item>>
+  [[Locked Choice|NodeName]]
 <<endif>>
 ```
 
@@ -201,7 +219,7 @@ The parser supports a subset of SugarCube 2.x features. The following are **not 
 - Nested `<<if>>` blocks — the parser will stop with an error
 - Functions in `<<set>>` (e.g., `<<set $x to random(1, 10)>>`) — only simple values are supported
 - Arrays and objects in variables — only integers, floats, and booleans
-- Passage tags — tags in `.twee` files are ignored
+- Twine passage metadata (position, size) is ignored
 - Multiple `.twee` files in one run — process each file separately
 
 ### Rich Text Limitations

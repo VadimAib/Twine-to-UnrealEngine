@@ -130,7 +130,7 @@ def log_separator():
 def log_pipeline_start(input_file):
     """Log pipeline start"""
     log_separator()
-    log_info("Twine → DataTable Conversion Pipeline")
+    log_info("Twine → Unreal Engine Conversion Pipeline")
     log_separator()
     log_info(f"Input file: {input_file}")
     log_info(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
