@@ -126,7 +126,8 @@ Backups are only created when the file actually changes.
 ├── logs/                    # Logs and reports (gitignored)
 ├── backups/                 # Versioned backups (gitignored)
 ├── build_dialogue.bat       # Entry point
-└── README.md
+├── README.md
+└── LICENSE
 ```
 
 ## Twee File Requirements
@@ -192,13 +193,16 @@ Backups are only created when the file actually changes.
 4. In the import dialog, set:
    - **Import Type:** DataTable
    - **Row Structure:** Create a new struct (see below)
+   - **Import Key Field:** `RowName`
 5. Click **Import**
+
+The `RowName` field in the JSON is used as the DataTable row key. Each node's `NodeID` from the `.twee` file becomes the row name in the DataTable.
 
 ### Required Structs
 
 Create the following Blueprint Structs in your UE project:
 
-#### 1. FDialogueCondition
+#### 1. ConditionStruct
 
 Represents a condition for displaying text or choices.
 
@@ -209,7 +213,7 @@ Represents a condition for displaying text or choices.
 | Operator | String | Comparison operator: `>=`, `<=`, `==`, `!=`, `>`, `<` (empty for boolean checks) |
 | Value | String | Value to compare against (empty for boolean checks) |
 
-#### 2. FDialogueAction
+#### 2. DialogueActionStruct
 
 Represents an action to modify a variable.
 
@@ -219,38 +223,38 @@ Represents an action to modify a variable.
 | Operation | String | Operation type: `SET_Int`, `SET_Bool`, `SET_Float`, `ADD_Int`, `SUB_Int`, `UNSET` |
 | Value | String | Value to set/add/subtract |
 
-#### 3. FDialogueTextSegment
+#### 3. TextSegmentStruct
 
 Represents a text segment with an optional condition.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| Text | Text | Dialogue text (supports UE Rich Text tags) |
-| ConditionID | FDialogueCondition | Condition for displaying this text |
+| Text | String | Dialogue text (supports UE Rich Text tags) |
+| ConditionID | ConditionStruct | Condition for displaying this text |
 
-#### 4. FDialogueChoice
+#### 4. DialogueChoiceStruct
 
 Represents a player choice with optional conditions and actions.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| ChoiceText | Text | Text displayed to the player |
+| ChoiceText | String | Text displayed to the player |
 | NextNodeID | String | ID of the next node to navigate to |
-| ConditionID | FDialogueCondition | Condition for showing this choice |
+| ConditionID | ConditionStruct | Condition for showing this choice |
 | AutoTransition | Boolean | If true, automatically transition to NextNodeID without player input |
-| InlineActions | Array of FDialogueAction | Actions to execute when this choice is selected |
-| InlineText | Text | Additional text to display (currently unused) |
+| InlineActions | Array of DialogueActionStruct | Actions to execute when this choice is selected |
+| InlineText | String | Additional text to display (currently unused) |
 
-#### 5. FDialogueNode (Main DataTable Row)
+#### 5. DialogueNodeStruct
 
 The main struct for each row in the DataTable.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| RowName | String | Unique identifier for this node (used as DataTable row name) |
-| TextSegments | Array of FDialogueTextSegment | Text to display (can have multiple segments with different conditions) |
-| Actions | Array of FDialogueAction | Actions to execute when entering this node |
-| Choices | Array of FDialogueChoice | Available choices for the player |
+| RowName | String | Unique identifier for this node (automatically set by DataTable from Import Key Field) |
+| TextSegments | Array of TextSegmentStruct | Text to display (can have multiple segments with different conditions) |
+| Actions | Array of DialogueActionStruct | Actions to execute when entering this node |
+| Choices | Array of DialogueChoiceStruct | Available choices for the player |
 
 ### Blueprint Logic Overview
 
@@ -266,7 +270,7 @@ To implement a dialogue system in Blueprints, you need to:
 
 ### Handling Conditions
 
-The `Type` field in `FDialogueCondition` determines how to evaluate the condition:
+The `Type` field in `ConditionStruct` determines how to evaluate the condition:
 
 - **Always** — condition is always true, display the text/choice
 - **Bool** — check if the boolean variable is true
@@ -302,7 +306,7 @@ elif Condition.Type == "Comparison":
 
 ### Handling Actions
 
-The `Operation` field in `FDialogueAction` determines how to modify the variable:
+The `Operation` field in `DialogueActionStruct` determines how to modify the variable:
 
 - **SET_Int**, **SET_Bool**, **SET_Float** — set variable to the specified value
 - **ADD_Int**, **ADD_Bool**, **ADD_Float** — add the value to the variable
@@ -351,18 +355,19 @@ The parser converts Markdown formatting to Unreal Engine Rich Text tags:
 To display Rich Text in UE:
 
 1. Use a **Text Render Component** or **Text Block** widget
-2. Set the text using the `Text` field from `FDialogueTextSegment`
+2. Set the text using the `Text` field from `TextSegmentStruct`
 3. Enable **Rich Text** in the widget properties
 4. The UE Rich Text system will automatically parse and render the tags
 
 Example:
 
 ```
-Text: "<i>Путь к побережью начинается.</>"
+Text: "<i>The path to the coast begins.</>"
 
-Result: Курсивный текст "Путь к побережью начинается."
+Result: Italic text "The path to the coast begins."
 ```
 
-## License
+## Disclaimer
 
-See [LICENSE](LICENSE) file for details.
+This code was generated almost entirely using **Qwen3.7-Plus**. I created it for my own purposes and did not invest time in polishing it for public release.  
+However, I decided to share it on the off chance that it saves someone else a few hours of work. Please treat it as a community contribution, not a production-grade solution.
