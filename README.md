@@ -369,5 +369,4 @@ Result: Italic text "The path to the coast begins."
 
 ## Disclaimer
 
-This code was generated almost entirely using **Qwen3.7-Plus**. I created it for my own purposes and did not invest time in polishing it for public release.  
-However, I decided to share it on the off chance that it saves someone else a few hours of work. Please treat it as a community contribution, not a production-grade solution.
+This code was generated almost entirely using **Qwen3.7-Plus**. I created it for my own purposes and did not invest time in polishing it for public release. However, I decided to share it on the off chance that it saves someone else a few hours of work. Please treat it as a community contribution, not a production-grade solution.
